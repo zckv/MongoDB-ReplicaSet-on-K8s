@@ -1,0 +1,17 @@
+groups:
+- name: mongodb
+  rules:
+
+  - alert: MongoDB replicaset member is down
+    expr: mongodb_rs_members_state == 0
+    for: 2m
+    labels:
+      severity: high
+      tag: cmsweb
+      service: mongodb
+      host: "{{ $labels.member_idx }}"
+      kind: database
+      action: Please restart MongoDB on 
+    annotations:
+      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down"
+      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m"
