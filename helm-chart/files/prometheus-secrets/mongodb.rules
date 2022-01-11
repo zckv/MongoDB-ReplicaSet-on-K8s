@@ -4,7 +4,7 @@ groups:
 
   - alert: MongoDB replicaset member is down (State is Startup)
     expr: mongodb_rs_members_state == 0
-    for: 15s
+    for: 2m
     labels:
       severity: high
       tag: cmsweb
@@ -18,7 +18,7 @@ groups:
 
   - alert: MongoDB replicaset member is down (State is Recovering)
     expr: mongodb_rs_members_state == 3
-    for: 15s
+    for: 2m
     labels:
       severity: high
       tag: cmsweb
@@ -32,7 +32,7 @@ groups:
 
   - alert: MongoDB replicaset member is down (State is Startup2)
     expr: mongodb_rs_members_state == 5
-    for: 15s
+    for: 2m
     labels:
       severity: high
       tag: cmsweb
@@ -46,7 +46,7 @@ groups:
 
   - alert: MongoDB replicaset member is down (State is Unknown)
     expr: mongodb_rs_members_state == 6
-    for: 15s
+    for: 2m
     labels:
       severity: high
       tag: cmsweb
@@ -60,7 +60,7 @@ groups:
 
   - alert: MongoDB replicaset member is down (State is Down)
     expr: mongodb_rs_members_state == 8
-    for: 15s
+    for: 2m
     labels:
       severity: high
       tag: cmsweb
@@ -74,7 +74,7 @@ groups:
 
   - alert: MongoDB replicaset member is down (State is Rollback)
     expr: mongodb_rs_members_state == 9
-    for: 15s
+    for: 2m
     labels:
       severity: high
       tag: cmsweb
@@ -88,7 +88,7 @@ groups:
 
   - alert: MongoDB replicaset member is down (State is Removed)
     expr: mongodb_rs_members_state == 10
-    for: 15s
+    for: 2m
     labels:
       severity: high
       tag: cmsweb
