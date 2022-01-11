@@ -2,7 +2,7 @@ groups:
 - name: mongodb
   rules:
 
-  - alert: MongoDB replicaset member is down (State: Startup)
+  - alert: MongoDB replicaset member is down (State is Startup)
     expr: mongodb_rs_members_state == 0
     for: 15s
     labels:
@@ -13,10 +13,10 @@ groups:
       kind: database
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
-      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State: Startup)"
-      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State: Startup)"
+      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Startup)"
+      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State is Startup)"
 
-  - alert: MongoDB replicaset member is down (State: Recovering)
+  - alert: MongoDB replicaset member is down (State is Recovering)
     expr: mongodb_rs_members_state == 3
     for: 15s
     labels:
@@ -27,10 +27,10 @@ groups:
       kind: database
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
-      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State: Recovering)"
-      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State: Recovering)"
+      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Recovering)"
+      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State is Recovering)"
 
-  - alert: MongoDB replicaset member is down (State: Startup2)
+  - alert: MongoDB replicaset member is down (State is Startup2)
     expr: mongodb_rs_members_state == 5
     for: 15s
     labels:
@@ -41,10 +41,10 @@ groups:
       kind: database
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
-      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State: Startup2)"
-      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State: Startup2)"
+      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Startup2)"
+      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State is Startup2)"
 
-  - alert: MongoDB replicaset member is down (State: Unknown)
+  - alert: MongoDB replicaset member is down (State is Unknown)
     expr: mongodb_rs_members_state == 6
     for: 15s
     labels:
@@ -55,10 +55,10 @@ groups:
       kind: database
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
-      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State: Unknown)"
-      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State: Unknown)"
+      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Unknown)"
+      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State is Unknown)"
 
-  - alert: MongoDB replicaset member is down (State: Down)
+  - alert: MongoDB replicaset member is down (State is Down)
     expr: mongodb_rs_members_state == 8
     for: 15s
     labels:
@@ -69,24 +69,10 @@ groups:
       kind: database
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
-      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State: Down)"
-      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State: Down)"
+      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Down)"
+      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State is Down)"
 
-  - alert: MongoDB replicaset member is down (State: Down)
-    expr: mongodb_rs_members_state == 8
-    for: 15s
-    labels:
-      severity: high
-      tag: cmsweb
-      service: mongodb
-      host: "{{ $labels.member_idx }}"
-      kind: database
-      action: Please check MongoDB on {{ $labels.member_idx }}
-    annotations:
-      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State: Down)"
-      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State: Down)"
-
-  - alert: MongoDB replicaset member is down (State: Rollback)
+  - alert: MongoDB replicaset member is down (State is Rollback)
     expr: mongodb_rs_members_state == 9
     for: 15s
     labels:
@@ -97,10 +83,10 @@ groups:
       kind: database
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
-      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State: Rollback)"
-      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State: Rollback)"
+      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Rollback)"
+      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State is Rollback)"
 
-  - alert: MongoDB replicaset member is down (State: Removed)
+  - alert: MongoDB replicaset member is down (State is Removed)
     expr: mongodb_rs_members_state == 10
     for: 15s
     labels:
@@ -111,5 +97,5 @@ groups:
       kind: database
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
-      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State: Removed)"
-      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State: Removed)"
+      summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Removed)"
+      description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State is Removed)"
