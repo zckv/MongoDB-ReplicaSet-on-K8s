@@ -8,9 +8,13 @@ quickSetting:
     accessMode: ReadWriteOnce
     storageSize: 1Ti
     mongodbMountPath: "/mnt/NFS1/cluster5/defacement-detection-test-deployment-with-helm/"
+monitoring:
+  jobName: "mongodb-exporter"
 db:
   rsname: "cms-rs"
   nodeHostname: nodeHostname
+  clusterName: mongodb
+  env: k8s-mongo
   auth:
     password: password
     keyfile: keyfile
