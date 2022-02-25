@@ -1,5 +1,4 @@
 #!/bin/bash
-
 retryCount=0
 
 echo "Checking MongoDB status:"
