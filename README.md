@@ -163,6 +163,121 @@ You can also use the loadbalancing service created with helm. If a hostname is a
 mongodb://mongodb-cms.cern.ch:27017/?replicaSet=cms-db -u clusterAdmin
 ```
 
+## Backups
+
+### Taking backups
+Backups of the DB can be taken using the openstack snapshot capability.
+Essentially we take a snapshot of the volume attached to the PRIMARY replica of MongoDB (due to weighted election this is in most cases `mongodb-0`)
+
+To take a backup (force flag must be used to take snapshot of in-use volume): 
+```bash
+openstack volume snapshot create --volume $VOLUME_NAME $SNAPSHOT NAME
+```
+
+To list all snapshots and make sure snapshot is created:
+
+```bash
+openstack volume snapshot list
+```
+
+### Restoring backups
+
+#### To existing cluster
+
+In order to restore from a snapshot to an existing cluster we need to:
+
+1. Create a new volume based on a snapshot:
+
+```bash
+openstack volume create --description "restored from snapshot 3c8bb939-ca1c-4dbb-9837-5870be2c9cd3" --snapshot 27de5435-8d49-42bd-b8d9-5902d4466858 restored-dev-volume
+```
+
+2. Remove two of the three nodes from the replicaset:
+
+Connect to mongodb and run:
+```bash
+rs.status() //To get the hostnames of the nodes
+rs.remove('hostname1')
+rs.remove('hostname2')
+```
+
+3. Tweak the deployment of mongodb-0 pod to use the new volume:
+
+replace:
+
+```bash
+- name: {{.Values.db.instance0.pvName}}
+    persistentVolumeClaim:
+        claimName: {{.Values.db.instance0.pvName}}
+```
+with:
+```bash
+- name: {{.Values.db.instance0.pvName}}
+    cinder:
+        volumeID: $ID_OF_RESTORED_VOLUME
+```
+
+4. Re-deploy the mongodb-0 pod. Exec in it and connect to mongo with the clusterAdmin user:
+
+```bash
+kubectl exec -it $POD_NAME -- bash
+mongo -u clusterAdmin
+```
+
+5. Force the current node (and the only one in the replica set) as primary:
+
+```bash
+cfg = {
+    "_id" : "cms-db",
+    "version" : 14,
+    "members" : [
+        {
+            "_id" : 0,
+            "host" : "mongodb-dev-valj3pvr5lkl-node-0.cern.ch:32001"
+        }
+    ]
+}
+rs.reconfig(cfg, {force: true})
+```
+
+6. Delete the two old deployment for pod-1 and pod-2 and delete the volumes they were using. We need fresh volumes so that replication will get the data from the snapshot in them.
+
+```bash
+kubectl delete deployment mongodb-1
+kubectl delete deployment mongodb-2
+kubectl delete pvc pvc-1, pvc-2
+openstack volume delete vol1, vol2
+```
+
+7. Redeploy deployments for pod-1 and pod-2 and wait until all pods are up an running.
+
+8. Connect to mongodb with `clusterAdmin` user and add again the two nodes to the replicaset:
+
+```bash
+cfg = {
+    "_id" : "cms-db",
+    "version" : 15,
+    "members" : [
+        {
+            "_id" : 0,
+            "host" : "mongodb-dev-valj3pvr5lkl-node-0.cern.ch:32001"
+        },
+        {
+            "_id" : 1,
+            "host" : "mongodb-dev-valj3pvr5lkl-node-0.cern.ch:32002"
+        },
+        {
+            "_id" : 2,
+            "host" : "mongodb-dev-valj3pvr5lkl-node-0.cern.ch:32003"
+        }
+    ]
+}
+rs.reconfig(cfg)
+```
+#### To a new cluster
+
+TBC
+
 
 ## Debuging
 
