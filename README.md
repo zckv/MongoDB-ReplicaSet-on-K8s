@@ -182,7 +182,7 @@ openstack volume snapshot list
 
 ### Restoring backups
 
-#### To existing cluster
+#### To the existing cluster:
 
 In order to restore from a snapshot to an existing cluster we need to:
 
@@ -229,7 +229,6 @@ mongo -u clusterAdmin
 ```bash
 cfg = {
     "_id" : "cms-db",
-    "version" : 14,
     "members" : [
         {
             "_id" : 0,
@@ -256,7 +255,6 @@ openstack volume delete vol1, vol2
 ```bash
 cfg = {
     "_id" : "cms-db",
-    "version" : 15,
     "members" : [
         {
             "_id" : 0,
@@ -274,9 +272,75 @@ cfg = {
 }
 rs.reconfig(cfg)
 ```
-#### To a new cluster
+#### To a new cluster:
 
-TBC
+In order to restore to a new cluster a few extra steps should be taken.
+
+1. Identify the old `db.auth.keyfile` and `db.auth.password` values from the previous cluster.
+
+Run this in the old helm installation and mark the values down.
+```bash
+helm get values mongodb 
+```
+
+2. Change the config of the deployment of mongodb-0 pod so that is uses the restored cinder volume.
+
+3. In the new cluster provide in `helm-install` the values that you got in step 1.
+
+4. Let the pods start running and exec in the pod-0.
+
+5. Connect to mongo, from inside the pod, with the clusterAdmin user:
+
+```bash
+mongodb -u clusterAdmin
+```
+and provide the olf password
+
+6. At this state this node is not part of the replica set. The issue is that the rs configuration is pointing to the old cluster hostnames.
+
+Run the following to verify:
+
+```bash
+rs.conf()
+```
+
+7. Create a config with the current node and force it to mongo:
+
+```bash
+cfg = {
+    "_id" : "cms-db",
+    "members" : [
+        {
+            "_id" : 0,
+            "host" : "mongodb-dev-restored-ml43h5saorn3-node-0.cern.ch:32001"
+        }
+    ]
+}
+rs.reconfig(cfg, {force: true})
+```
+
+8. After making sure that the db works with 1 node, add the remaining two:
+
+```bash
+cfg = {
+    "_id" : "cms-db",
+    "members" : [
+        {
+            "_id" : 0,
+            "host" : "mongodb-dev-restored-ml43h5saorn3-node-0.cern.ch:32001"
+        },
+        {
+            "_id" : 1,
+            "host" : "mongodb-dev-restored-ml43h5saorn3-node-0.cern.ch:32002"
+        },
+        {
+            "_id" : 2,
+            "host" : "mongodb-dev-restored-ml43h5saorn3-node-0.cern.ch:32003"
+        }
+    ]
+}
+rs.reconfig(cfg)
+```
 
 
 ## Debuging
