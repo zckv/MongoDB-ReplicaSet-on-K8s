@@ -29,6 +29,9 @@ Using Helm, you can launch the application with the the following command, but f
 kubectl create namespace monitoring
 ```
 
+Before installing helm please change the monitoring configuration files accoridingly. Specifically the `job_name` for mongodb-exporter in `helm-chart/files/prometheus-secrets/prometheus.yaml` should be changed to be able to enable monitoring.
+The `remote_write` section should also be uncommented to enable pushing metrics to the central cms monitoring portal.
+
 ```bash
 helm install mongodb --set db.auth.password='xxx' --set db.auth.keyfile="$(openssl rand -base64 756)" --set db.rsname='rsName' --set db.nodeHostname='something-node-0.cern.ch' . 
 ```
@@ -154,6 +157,12 @@ The installation is using NodePort services on the ports 32001, 32002 and 32003:
  mongo mongodb://mongo-cms-fcmki4ox2hnr-node-0.cern.ch:32001,mongo-cms-fcmki4ox2hnr-node-0.cern.ch:32002,mongo-cms-fcmki4ox2hnr-node-0.cern.ch:32003/admin?replicaSet=rs0 -u clusterAdmin
 ```
 
+You can also use the loadbalancing service created with helm. If a hostname is added to the lodbalancer (using the `openstack loadbalancer set --description` command) then mongodb can be acessed in this hostname:
+
+```bash
+mongodb://mongodb-cms.cern.ch:27017/?replicaSet=cms-db -u clusterAdmin
+```
+
 
 ## Debuging
 
@@ -166,4 +175,10 @@ kubectl delete ClusterRoleBinding prometheus-adapter:system:auth-delegator
 kubectl delete ClusterRoleBinding prometheus-adapter-resource-reader
 kubectl delete ClusterRoleBinding prometheus-adapter-hpa-controlle
 kubectl delete APIService v1beta1.custom.metrics.k8s.io
+```
+
+In case you need a pod with mongo cli to debug connection to the DB you can spawn one using:
+
+```bash
+kubectl run mongosh --image=mongo --restart=Never
 ```
