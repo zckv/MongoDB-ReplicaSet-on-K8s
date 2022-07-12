@@ -34,6 +34,7 @@ db:
     livenessProbe:
       initialDelaySeconds: 90
       periodSeconds: 12
+      timeoutSeconds: 5
       failureThreshold: 10
   instance0:
     pvName: "provisioned-storage-mongodb-0"

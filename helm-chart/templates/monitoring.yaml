@@ -449,7 +449,7 @@ kind: Service
 metadata:
   labels:
     app: mongodb-exporter
-  name: mongodb-exporter
+  name: mongodb-cms-k8s-exporter
   namespace: monitoring
 spec:
   ports:
