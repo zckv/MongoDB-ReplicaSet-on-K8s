@@ -7,8 +7,8 @@ groups:
     for: 5m
     labels:
       severity: critical
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes Node ready (instance {{ $labels.instance }})"
       description: "Node {{ $labels.node }} has been unready for a long time\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -18,8 +18,8 @@ groups:
     for: 5m
     labels:
       severity: critical
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes memory pressure (instance {{ $labels.instance }})"
       description: "{{ $labels.node }} has MemoryPressure condition\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -29,8 +29,8 @@ groups:
     for: 5m
     labels:
       severity: critical
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes disk pressure (instance {{ $labels.instance }})"
       description: "{{ $labels.node }} has DiskPressure condition\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -40,8 +40,8 @@ groups:
     for: 5m
     labels:
       severity: critical
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes out of disk (instance {{ $labels.instance }})"
       description: "{{ $labels.node }} has OutOfDisk condition\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -51,8 +51,8 @@ groups:
     for: 5m
     labels:
       severity: warning
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes Job failed (instance {{ $labels.instance }})"
       description: "Job {{$labels.namespace}}/{{$labels.exported_job}} failed to complete\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -62,8 +62,8 @@ groups:
     for: 5m
     labels:
       severity: warning
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes CronJob suspended (instance {{ $labels.instance }})"
       description: "CronJob {{ $labels.namespace }}/{{ $labels.cronjob }} is suspended\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -73,8 +73,8 @@ groups:
     for: 5m
     labels:
       severity: warning
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes PersistentVolumeClaim pending (instance {{ $labels.instance }})"
       description: "PersistentVolumeClaim {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is pending\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -84,8 +84,8 @@ groups:
     for: 5m
     labels:
       severity: warning
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes Volume out of disk space (instance {{ $labels.instance }})"
       description: "Volume is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -95,8 +95,8 @@ groups:
     for: 5m
     labels:
       severity: critical
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes Volume full in four days (instance {{ $labels.instance }})"
       description: "{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is expected to fill up within four days. Currently {{ $value | humanize }}% is available.\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -106,8 +106,8 @@ groups:
     for: 5m
     labels:
       severity: critical
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes PersistentVolume error (instance {{ $labels.instance }})"
       description: "Persistent volume is in bad state\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -117,8 +117,8 @@ groups:
     for: 5m
     labels:
       severity: warning
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes HPA scaling ability (instance {{ $labels.instance }})"
       description: "Pod is unable to scale\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -128,8 +128,8 @@ groups:
 #    for: 5m
 #    labels:
 #      severity: critical
-#      tag: k8s
-#      kind: cluster
+#      tag: mongodb-k8s-cluster
+#      kind: mongodb-cluster
 #    annotations:
 #      summary: "Kubernetes Pod not healthy (instance {{ $labels.instance }})"
 #      description: "Pod has been in a non-ready state for longer than an hour.\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -139,8 +139,8 @@ groups:
     for: 5m
     labels:
       severity: warning
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes pod crash looping (instance {{ $labels.instance }})"
       description: "Pod {{ $labels.pod }} is crash looping\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -150,8 +150,8 @@ groups:
     for: 5m
     labels:
       severity: critical
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes API server errors (instance {{ $labels.instance }})"
       description: "Kubernetes API server is experiencing high error rate\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -161,8 +161,8 @@ groups:
     for: 5m
     labels:
       severity: critical
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes API client errors (instance {{ $labels.instance }})"
       description: "Kubernetes API client is experiencing high error rate\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -172,8 +172,8 @@ groups:
     for: 5m
     labels:
       severity: warning
-      tag: k8s
-      kind: cluster
+      tag: mongodb-k8s-cluster
+      kind: mongodb-cluster
     annotations:
       summary: "Kubernetes API server latency (instance {{ $labels.instance }})"
       description: "Kubernetes API server has a 99th percentile latency of {{ $value }} seconds for {{ $labels.verb }} {{ $labels.resource }}.\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"

@@ -7,10 +7,10 @@ groups:
     for: 2m
     labels:
       severity: high
-      tag: cmsweb
-      service: mongodb
+      tag: mongodb-k8s-cluster
+      service: mongodb-k8s
       host: "{{ $labels.member_idx }}"
-      kind: database
+      kind: mongodb
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
       summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Startup)"
@@ -21,10 +21,10 @@ groups:
     for: 2m
     labels:
       severity: high
-      tag: cmsweb
-      service: mongodb
+      tag: mongodb-k8s-cluster
+      service: mongodb-k8s
       host: "{{ $labels.member_idx }}"
-      kind: database
+      kind: mongodb
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
       summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Recovering)"
@@ -35,10 +35,10 @@ groups:
     for: 2m
     labels:
       severity: high
-      tag: cmsweb
-      service: mongodb
+      tag: mongodb-k8s-cluster
+      service: mongodb-k8s
       host: "{{ $labels.member_idx }}"
-      kind: database
+      kind: mongodb
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
       summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Startup2)"
@@ -49,10 +49,10 @@ groups:
     for: 2m
     labels:
       severity: high
-      tag: cmsweb
-      service: mongodb
+      tag: mongodb-k8s-cluster
+      service: mongodb-k8s
       host: "{{ $labels.member_idx }}"
-      kind: database
+      kind: mongodb
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
       summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Unknown)"
@@ -63,10 +63,10 @@ groups:
     for: 2m
     labels:
       severity: high
-      tag: cmsweb
-      service: mongodb
+      tag: mongodb-k8s-cluster
+      service: mongodb-k8s
       host: "{{ $labels.member_idx }}"
-      kind: database
+      kind: mongodb
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
       summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Down)"
@@ -77,10 +77,10 @@ groups:
     for: 2m
     labels:
       severity: high
-      tag: cmsweb
-      service: mongodb
+      tag: mongodb-k8s-cluster
+      service: mongodb-k8s
       host: "{{ $labels.member_idx }}"
-      kind: database
+      kind: mongodb
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
       summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Rollback)"
@@ -91,11 +91,34 @@ groups:
     for: 2m
     labels:
       severity: high
-      tag: cmsweb
-      service: mongodb
+      tag: mongodb-k8s-cluster
+      service: mongodb-k8s
       host: "{{ $labels.member_idx }}"
-      kind: database
+      kind: mongodb
       action: Please check MongoDB on {{ $labels.member_idx }}
     annotations:
       summary: "mongodb replica member with hostname {{ $labels.member_idx }} ( {{ $labels.member_state }} ) is down (State is Removed)"
       description: "Replica member with hostname {{ $labels.member_idx }} has been down for more than 2m (State is Removed)"
+
+  #- alert: MongodbVirtualMemoryUsage
+  #    expr: (sum(mongodb_ss_mem_virtual) BY (instance) / sum(mongodb_ss_mem_resident) BY (instance)) > 3
+  #    for: 2m
+  #    labels:
+  #      severity: warning
+  #    annotations:
+  #      summary: MongoDB virtual memory usage (instance {{ $labels.instance }})
+  #      description: "High memory usage\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+  - alert: MongoDB K8S Node has high memory consumption
+      expr: ((eagle_node_resource_usage_memory_bytes)  BY (node)) / ((eagle_node_resource_allocatable_memory_bytes)  BY (node)) > 0.85
+      for: 2m
+      labels:
+        severity: high
+        tag: mongodb-k8s-cluster
+        service: mongodb-k8s
+        host: "{{ $labels.node }}"
+        kind: mongodb
+        action: Please check node {{ $labels.node }} for high memory consumption.
+      annotations:
+          summary: MongoDB node has high memory usage (node {{ $labels.node }})
+          description: "High memory in MongoDB K8S Node usage\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"

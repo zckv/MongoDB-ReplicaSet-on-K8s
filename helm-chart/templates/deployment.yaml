@@ -59,7 +59,7 @@ spec:
             limits:
               ephemeral-storage: {{.Values.db.pod.resources.limits.ephemeralStorage}}
               cpu: {{.Values.db.pod.resources.requests.cpu}}
-              memory: {{.Values.db.pod.resources.requests.memory}}
+              memory: {{.Values.db.pod.resources.limits.memory}}
           env:
             - name: "RS_NAME"
               value: {{.Values.db.rsname}}
@@ -147,7 +147,7 @@ spec:
             limits:
               ephemeral-storage: {{.Values.db.pod.resources.limits.ephemeralStorage}}
               cpu: {{.Values.db.pod.resources.requests.cpu}}
-              memory: {{.Values.db.pod.resources.requests.memory}}
+              memory: {{.Values.db.pod.resources.limits.memory}}
           env:
             - name: "RS_NAME"
               value: {{.Values.db.rsname}}
@@ -226,7 +226,7 @@ spec:
             limits:
               ephemeral-storage: {{.Values.db.pod.resources.limits.ephemeralStorage}}
               cpu: {{.Values.db.pod.resources.requests.cpu}}
-              memory: {{.Values.db.pod.resources.requests.memory}}
+              memory: {{.Values.db.pod.resources.limits.memory}}
           env:
             - name: "RS_NAME"
               value: {{.Values.db.rsname}}

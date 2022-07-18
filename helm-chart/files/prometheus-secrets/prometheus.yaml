@@ -22,9 +22,15 @@ scrape_configs:
   - job_name: "mongodb-exporter-changename"
     static_configs:
         - targets: ["mongodb-cms-k8s-exporter.monitoring.svc.cluster.local:8080"]
+          labels:
+              env: "mongodb-k8s"
+              cluster: "mongodb-prod"
   - job_name: "kube-eagle"
     static_configs:
         - targets: ["kube-eagle.monitoring.svc.cluster.local:8080"]
+          labels:
+                env: "mongodb-k8s"
+                cluster: "mongodb-prod"
   - job_name: "nginx-ingress-controller"
     kubernetes_sd_configs:
     - role: pod
