@@ -109,16 +109,16 @@ groups:
   #      summary: MongoDB virtual memory usage (instance {{ $labels.instance }})
   #      description: "High memory usage\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
-  - alert: MongoDB K8S Node has high memory consumption
-      expr: ((eagle_node_resource_usage_memory_bytes)  BY (node)) / ((eagle_node_resource_allocatable_memory_bytes)  BY (node)) > 0.85
-      for: 2m
-      labels:
-        severity: high
-        tag: mongodb-k8s-cluster
-        service: mongodb-k8s
-        host: "{{ $labels.node }}"
-        kind: mongodb
-        action: Please check node {{ $labels.node }} for high memory consumption.
-      annotations:
-          summary: MongoDB node has high memory usage (node {{ $labels.node }})
-          description: "High memory in MongoDB K8S Node usage\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+  #- alert: MongoDB K8S Node has high memory consumption
+  #    expr: ((eagle_node_resource_usage_memory_bytes)  BY (node)) / ((eagle_node_resource_allocatable_memory_bytes)  BY (node)) > 0.85
+  #    for: 2m
+  #    labels:
+  #      severity: high
+  #      tag: mongodb-k8s-cluster
+  #      service: mongodb-k8s
+  #      host: "{{ $labels.node }}"
+  #      kind: mongodb
+  #      action: Please check node {{ $labels.node }} for high memory consumption.
+  #    annotations:
+  #        summary: MongoDB node has high memory usage (node {{ $labels.node }})
+  #        description: "High memory in MongoDB K8S Node usage\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
