@@ -4,7 +4,7 @@ quickSetting:
   image:
     mongodb: registry.cern.ch/cmsweb/cmsmongo
   pvc:
-    storageClassName: io3
+    storageClassName: cpio1
     accessMode: ReadWriteOnce
     storageSize: 1Ti
     mongodbMountPath: "/mnt/NFS1/cluster5/defacement-detection-test-deployment-with-helm/"
