@@ -1,0 +1,43 @@
+---
+name: Build and Deploy Mongo Image
+
+on:
+  push:
+    paths:
+      - "**.Dockerfile"
+      - "source/*.sh"
+  workflow_dispatch:
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    strategy:
+      matrix:
+        dockerfile: 
+          # NOTE: Maybe add variation here
+          - mongodb_with_rs_size_3.Dockerfile
+    env:
+      REGISTRY: ghcr.io
+      REGISTRY_USERNAME: ${{ github.repository_owner }}
+      REGISTRY_PASSWORD: ${{ secrets.PAT_public }}
+      DOCKERFILE: ${{ matrix.dockerfile }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Log in to registry
+        run: echo "$REGISTRY_PASSWORD" | docker login "$REGISTRY" -u "$REGISTRY_USERNAME" --password-stdin
+      - name: Build and Push images
+        run: |
+          cd source
+          IMAGE_NAME=$(echo "$DOCKERFILE" | cut -d'.' -f1)
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo "$VERSION" | sed -e 's/^v//')
+          [ "$VERSION" == "master" ] && VERSION=latest
+          IMAGE_ID="$REGISTRY"/$(echo "$REGISTRY_USERNAME" | tr '[A-Z]' '[a-z]')/"$IMAGE_NAME"
+          echo IMAGE_ID="$IMAGE_ID"
+          echo VERSION="$VERSION"
+          docker build . --file "$DOCKERFILE" --tag $IMAGE_ID:$VERSION --build-arg="TOKEN=$REGISTRY_PASSWORD"
+          docker push "$IMAGE_ID:$VERSION"
