@@ -1,43 +1,59 @@
 #!/bin/bash
 
-if [ -z "$MONGODB_ID" ]; then
-    # set MONGODB_ID to master per default
-    export MONGODB_ID="0"
+if [ -z "$ID" ]; then
+    # set ID to master per default
+    export ID="0"
 fi
 
-if [ -z "$MONGODB_RS" ]; then
-    export MONGODB_RS="mongo_rs"
+if [ -z "$RS_NAME" ]; then
+    export RS_NAME="mongo_rs"
 fi
 
-if [ -z "$POD_X_PORT" ]; then
-    # set POD_X_PORT to default
-    export POD_X_PORT="27017"
+if [ -z "$PORT" ]; then
+    # set PORT to default
+    export PORT="27017"
 fi
 
-if [ -z "$POD_X_IP" ]; then
+if [ -z "$IP" ]; then
     # Should work fine in almost every case
-    export POD_X_IP="$(hostname -i)"
+    export IP="$(hostname -i)"
 fi
 
 # create folder for db
-mkdir -p "/data/db/rs-$MONGODB_ID"
+mkdir -p "/data/db/rs-$ID"
 
-echo "Starting mongo on $POD_X_IP:$POD_X_PORT"
-echo "ID $MONGODB_ID in replSet $MONGODB_RS"
+echo "Starting mongo on $IP:$PORT"
+echo "ID $ID in replSet $RS_NAME"
 
 mongo_initiate_rs_conf()
 {
+	slave_id=1
+	members=""
+	echo "SLAVES are $SLAVES"
+	for slave in ${SLAVES//,/ } ;
+	do
+		# Mongo can't use more than 7 members with priority / descision power
+		if [[ $slave_id -lt 6 ]] ; 
+		then 
+			members="{_id : $slave_id, host : '$slave', priority : 0.5}, $members"
+		else
+			members="{_id : $slave_id, host : '$slave'}, $members"
+		fi
+		slave_id=$((slave_id+1))
+	done
+
+	sleep 5
+	echo "SENDING CONFIG"
     # Send ReplicaSet config to Mongod using mongosh
-    mongosh --eval "mongodb = ['$POD_X_IP:$POD_X_PORT', '$POD_1_IP:$POD_1_PORT', '$POD_2_IP:$POD_2_PORT'], rsname = '$MONGODB_RS'" --shell << EOL
+    mongosh --eval "rsname = '$RS_NAME'" --shell << EOL
 cfg = {
     _id: rsname,
     members:
 	[
-	    {_id : 0, host : mongodb[0], priority : 1},
-            {_id : 1, host : mongodb[1], priority : 0.9},
-            {_id : 2, host : mongodb[2], priority : 0.5}
-        ]
-    }
+		$members
+	    {_id : 0, host : '$IP:$PORT', priority : 2}
+    ]
+}
 rs.initiate(cfg)
 EOL
 }
@@ -45,11 +61,8 @@ EOL
 config_master()
 {
     # Configure master node
-    echo "Configuration to Master Mode"
-    echo "POD_1_IP=$POD_1_IP"
-    echo "POD_1_PORT=$POD_1_PORT"
-    echo "POD_2_IP=$POD_2_IP"
-    echo "POD_2_PORT=$POD_2_PORT"
+    echo "Configuration of Master node"
+    echo "Slaves are: \"$SLAVES\""
 
 	# Config first try
 	mongo_initiate_rs_conf
@@ -63,7 +76,6 @@ config_master()
 		fi
 		echo "MongoDB not ready for Replica Set configuration, retrying in 5 seconds..."
 		echo "Current rs status: $(mongosh --quiet --eval 'rs.status().ok')"
-		sleep 5
 		mongo_initiate_rs_conf
 		retryCount=$((retryCount+1))
 	done
@@ -71,8 +83,8 @@ config_master()
 	echo "Replica Set configuration successful..."
 }
 
-if [ "$MONGODB_ID" == "0" ]; then
+if [ "$ID" == "0" ]; then
     config_master &
 fi
 
-mongod --quiet --replSet "$MONGODB_RS" --port "$POD_X_PORT" --bind_ip localhost,"$POD_X_IP" --dbpath "/data/db/rs-$MONGODB_ID" --oplogSize 128
+mongod --quiet --replSet "$RS_NAME" --port "$PORT" --bind_ip localhost,"$IP" --dbpath "/data/db/rs-$ID" --oplogSize 128

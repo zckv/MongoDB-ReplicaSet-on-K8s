@@ -1,6 +1,6 @@
 # MongoDB ReplicaSet On K8s
 
-This project containers all necessary files to launch a MongoDB ReplicaSet with 3 Mongo instances on a K8s cluster.
+This project containers all necessary files to launch a MongoDB ReplicaSet with multiples Mongo instances on a K8s cluster.
 
 Here are some files you can find in this project:
 
